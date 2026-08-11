@@ -1,0 +1,32 @@
+# ===== خروجی‌های بیلد =====
+bin/
+obj/
+publish/
+Release/
+Installer/Output/
+
+# ===== Visual Studio =====
+.vs/
+*.user
+*.suo
+*.cache
+*.log
+*.userosscache
+*.sln.docstates
+
+# ===== NuGet =====
+*.nupkg
+*.snupkg
+packages/
+
+# ===== فایل‌های توزیع (زیپ‌های حجیم) =====
+*.zip
+DevOver-Release.zip
+Langwich-Release.zip
+
+# ===== تصویر منبع آیکون (حجیم و موقتی) =====
+ChatGPT Image*.png
+
+# ===== ویندوز =====
+Thumbs.db
+Desktop.ini
