@@ -29,4 +29,10 @@ public sealed class AppSettings
     /// (فارسی برای متن فارسی، انگلیسی برای متن انگلیسی).
     /// </summary>
     public bool SwitchKeyboardLayoutAfterConvert { get; set; } = true;
+
+    /// <summary>
+    /// اگر false باشد (اولین اجرا)، پنجره‌ی خوش‌آمد (Splash) نمایش داده می‌شود.
+    /// بعد از اولین نمایش true می‌شود.
+    /// </summary>
+    public bool HasShownSplash { get; set; } = false;
 }

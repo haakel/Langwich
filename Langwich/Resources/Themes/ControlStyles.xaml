@@ -1,23 +1,35 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- ===== استایل کارت (Border) ===== -->
+    <!-- ===== فونت پایه (Inter اگر موجود، وگرنه Segoe UI) ===== -->
+    <FontFamily x:Key="AppFontFamily">Segoe UI</FontFamily>
+
+    <!-- ===== کارت (Border) ===== -->
     <Style x:Key="CardBorderStyle" TargetType="Border">
         <Setter Property="Background"       Value="{DynamicResource CardBackgroundBrush}"/>
         <Setter Property="BorderBrush"      Value="{DynamicResource BorderBrush}"/>
         <Setter Property="BorderThickness"  Value="1"/>
-        <Setter Property="CornerRadius"     Value="10"/>
-        <Setter Property="Padding"          Value="16,12"/>
+        <Setter Property="CornerRadius"     Value="12"/>
+        <Setter Property="Padding"          Value="18,14"/>
     </Style>
 
-    <!-- ===== دکمه اصلی (بنفش) ===== -->
+    <!-- ===== Heading کوچک داخل کارت ===== -->
+    <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily"   Value="{StaticResource AppFontFamily}"/>
+        <Setter Property="FontSize"     Value="13"/>
+        <Setter Property="FontWeight"   Value="SemiBold"/>
+        <Setter Property="Foreground"   Value="{DynamicResource PrimaryTextBrush}"/>
+        <Setter Property="Margin"       Value="0,0,0,12"/>
+    </Style>
+
+    <!-- ===== دکمه اصلی (Teal) ===== -->
     <Style x:Key="PrimaryButtonStyle" TargetType="Button">
         <Setter Property="Background"   Value="{DynamicResource AccentBrush}"/>
         <Setter Property="Foreground"   Value="White"/>
-        <Setter Property="FontFamily"   Value="Segoe UI"/>
+        <Setter Property="FontFamily"   Value="{StaticResource AppFontFamily}"/>
         <Setter Property="FontSize"     Value="13"/>
         <Setter Property="FontWeight"   Value="SemiBold"/>
-        <Setter Property="Padding"      Value="20,8"/>
+        <Setter Property="Padding"      Value="24,9"/>
         <Setter Property="Cursor"       Value="Hand"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Template">
@@ -46,13 +58,13 @@
         </Setter>
     </Style>
 
-    <!-- ===== دکمه ثانویه (خاکستری) ===== -->
+    <!-- ===== دکمه ثانویه ===== -->
     <Style x:Key="SecondaryButtonStyle" TargetType="Button">
         <Setter Property="Background"      Value="{DynamicResource SecondaryButtonBgBrush}"/>
         <Setter Property="Foreground"      Value="{DynamicResource PrimaryTextBrush}"/>
-        <Setter Property="FontFamily"      Value="Segoe UI"/>
+        <Setter Property="FontFamily"      Value="{StaticResource AppFontFamily}"/>
         <Setter Property="FontSize"        Value="13"/>
-        <Setter Property="Padding"         Value="16,8"/>
+        <Setter Property="Padding"         Value="18,9"/>
         <Setter Property="Cursor"          Value="Hand"/>
         <Setter Property="BorderBrush"     Value="{DynamicResource BorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
@@ -71,6 +83,9 @@
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Bd" Property="BorderBrush"
                                     Value="{DynamicResource AccentBrush}"/>
+                            <Setter TargetName="Bd" Property="Background"
+                                    Value="{DynamicResource ButtonHoverBrush}"/>
+                            <Setter Property="Foreground" Value="White"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="Bd" Property="Opacity" Value="0.85"/>
@@ -81,17 +96,60 @@
         </Setter>
     </Style>
 
-    <!-- ===== CheckBox پیش‌فرض ===== -->
-    <Style TargetType="CheckBox">
+    <!-- ===== CheckBox سفارشی (RTL درست + مربع مدرن) ===== -->
+    <Style x:Key="ModernCheckBoxStyle" TargetType="CheckBox">
         <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
-        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}"/>
         <Setter Property="FontSize"   Value="13"/>
         <Setter Property="Cursor"     Value="Hand"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <StackPanel Orientation="Horizontal" Background="Transparent">
+                        <Border x:Name="Box"
+                                Width="20" Height="20"
+                                CornerRadius="5"
+                                Background="{DynamicResource SecondaryButtonBgBrush}"
+                                BorderBrush="{DynamicResource BorderBrush}"
+                                BorderThickness="1.5"
+                                VerticalAlignment="Center">
+                            <Path x:Name="CheckMark"
+                                  Data="M 4,10 L 8,14 L 15,5"
+                                  Stroke="White"
+                                  StrokeThickness="2.2"
+                                  StrokeStartLineCap="Round"
+                                  StrokeEndLineCap="Round"
+                                  Visibility="Collapsed"/>
+                        </Border>
+                        <ContentPresenter Margin="10,0,0,0"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True"/>
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Box" Property="Background"
+                                    Value="{DynamicResource CheckBoxBgBrush}"/>
+                            <Setter TargetName="Box" Property="BorderBrush"
+                                    Value="{DynamicResource CheckBoxBgBrush}"/>
+                            <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Box" Property="BorderBrush"
+                                    Value="{DynamicResource AccentBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
+
+    <!-- ===== CheckBox پیش‌فرض (همه به استایل مدرن) ===== -->
+    <Style TargetType="CheckBox" BasedOn="{StaticResource ModernCheckBoxStyle}"/>
 
     <!-- ===== TextBlock پیش‌فرض ===== -->
     <Style TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
     </Style>
 

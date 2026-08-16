@@ -58,13 +58,22 @@ public partial class App : Application
         _startupService       = new StartupService();
 
         // ۳. بارگذاری تنظیمات ذخیره‌شده
-        _settingsService.Load();
-        var settings = _settingsService.Current;
-        _currentModifiers = settings.HotkeyModifiers;
-        _currentKey       = settings.HotkeyKey;
+                _settingsService.Load();
+                var settings = _settingsService.Current;
+                _currentModifiers = settings.HotkeyModifiers;
+                _currentKey       = settings.HotkeyKey;
 
-        // اعمال تنظیمات نگاشت «پ» روی سرویس تبدیل
-        _converterService.UseAlternatePeKey = settings.UseAlternatePeKey;
+                // اعمال تنظیمات نگاشت «پ» روی سرویس تبدیل
+                _converterService.UseAlternatePeKey = settings.UseAlternatePeKey;
+
+                // ۳.۵ اگر اولین اجراست، پنجره‌ی خوش‌آمد (Splash) را نشان بده
+                if (!settings.HasShownSplash)
+                {
+                    var splash = new Views.SplashWindow();
+                    splash.ShowAndCloseAfter(TimeSpan.FromSeconds(2.2));
+                    settings.HasShownSplash = true;
+                    _settingsService.Save();
+                }
 
         // ۴. اعمال تم
         ThemeManager.ApplyTheme(settings.IsDarkTheme);

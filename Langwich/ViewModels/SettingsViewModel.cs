@@ -39,11 +39,18 @@ public sealed class SettingsViewModel : ViewModelBase
     }
 
     private bool _startWithWindows;
-    public bool StartWithWindows
-    {
-        get => _startWithWindows;
-        set => SetProperty(ref _startWithWindows, value);
-    }
+        public bool StartWithWindows
+        {
+            get => _startWithWindows;
+            set => SetProperty(ref _startWithWindows, value);
+        }
+
+        private bool _createDesktopShortcut;
+        public bool CreateDesktopShortcut
+        {
+            get => _createDesktopShortcut;
+            set => SetProperty(ref _createDesktopShortcut, value);
+        }
 
     private bool _notificationsEnabled;
     public bool NotificationsEnabled
@@ -125,14 +132,15 @@ public sealed class SettingsViewModel : ViewModelBase
         _hotkeyService   = hotkeyService;
 
         // بارگذاری مقادیر فعلی از تنظیمات
-        var s = _settingsService.Current;
-        _hotkeyModifiers     = s.HotkeyModifiers;
-        _hotkeyKey           = s.HotkeyKey;
-        _startWithWindows    = s.StartWithWindows;
-        _notificationsEnabled = s.NotificationsEnabled;
-        _isDarkTheme         = s.IsDarkTheme;
-        _useAlternatePeKey   = s.UseAlternatePeKey;
-        _switchKeyboardLayoutAfterConvert = s.SwitchKeyboardLayoutAfterConvert;
+                var s = _settingsService.Current;
+                _hotkeyModifiers     = s.HotkeyModifiers;
+                _hotkeyKey           = s.HotkeyKey;
+                _startWithWindows    = s.StartWithWindows;
+                _createDesktopShortcut = _startupService.IsDesktopShortcutCreated;
+                _notificationsEnabled = s.NotificationsEnabled;
+                _isDarkTheme         = s.IsDarkTheme;
+                _useAlternatePeKey   = s.UseAlternatePeKey;
+                _switchKeyboardLayoutAfterConvert = s.SwitchKeyboardLayoutAfterConvert;
 
         StartListeningForHotkeyCommand = new RelayCommand(() =>
         {
@@ -184,7 +192,10 @@ public sealed class SettingsViewModel : ViewModelBase
         _settingsService.Save();
 
         // اعمال تنظیمات Startup در رجیستری
-        _startupService.SetStartup(StartWithWindows);
+                _startupService.SetStartup(StartWithWindows);
+
+                // ساخت/حذف میانبر دسکتاپ
+                _startupService.SetDesktopShortcut(CreateDesktopShortcut);
 
         // اگر میانبر تغییر کرده، دوباره ثبت شود
         _hotkeyService.RegisterHotkey(HotkeyModifiers, HotkeyKey);

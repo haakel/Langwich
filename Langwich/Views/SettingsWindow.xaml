@@ -3,108 +3,174 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:helpers="clr-namespace:Langwich.Helpers"
         Title="Langwich – تنظیمات"
-        Width="420" Height="490"
+        Width="440" Height="560"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         FlowDirection="RightToLeft"
         FontFamily="Segoe UI"
         ShowInTaskbar="False"
         PreviewKeyDown="Window_PreviewKeyDown"
-        Background="{DynamicResource WindowBackgroundBrush}">
+        Background="{DynamicResource WindowBackgroundBrush}"
+        WindowStyle="None"
+        AllowsTransparency="True">
 
     <Window.Resources>
         <helpers:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
     </Window.Resources>
 
-    <StackPanel Margin="20">
+    <Border Background="{DynamicResource WindowBackgroundBrush}" CornerRadius="14"
+            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="24" ShadowDepth="4" Opacity="0.35" Color="Black"/>
+        </Border.Effect>
 
-        <!-- عنوان -->
-        <TextBlock Text="Langwich"
-                   FontSize="22"
-                   FontWeight="Bold"
-                   Foreground="{DynamicResource AccentBrush}"
-                   Margin="0,0,0,4"/>
-        <TextBlock Text="تبدیل هوشمند چیدمان کیبورد فارسی ↔ انگلیسی"
-                   FontSize="12"
-                   Foreground="{DynamicResource SecondaryTextBrush}"
-                   Margin="0,0,0,16"/>
+        <Grid Margin="24">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-        <!-- کارت میانبر -->
-        <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,12">
-            <StackPanel>
-                <TextBlock Text="⌨  میانبر سراسری"
-                           FontSize="13" FontWeight="SemiBold"
-                           Foreground="{DynamicResource PrimaryTextBrush}"
-                           Margin="0,0,0,8"/>
-
-                <DockPanel>
-                    <TextBlock Text="کلید فعلی:"
-                               Foreground="{DynamicResource SecondaryTextBrush}"
-                               VerticalAlignment="Center"
-                               DockPanel.Dock="Right"
-                               Margin="8,0,0,0"/>
-                    <Button Content="{Binding HotkeyDisplayText}"
-                            Command="{Binding StartListeningForHotkeyCommand}"
-                            Style="{StaticResource SecondaryButtonStyle}"
-                            MinWidth="140"
-                            HorizontalAlignment="Left"/>
-                </DockPanel>
-
-                <!-- راهنمای ضبط کلید -->
-                <TextBlock Text="🎯 حالا کلید مورد نظر را بفشارید..."
-                           FontSize="11"
-                           Foreground="{DynamicResource AccentBrush}"
-                           Margin="0,6,0,0"
-                           Visibility="{Binding IsListeningForHotkey, Converter={StaticResource BoolToVisibility}}"/>
+            <!-- ===== هدر (RTL طبیعی: لوگو + تیتر) ===== -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,18">
+                <StackPanel Orientation="Horizontal">
+                    <Border Width="40" Height="40" CornerRadius="10"
+                            Background="{DynamicResource AccentBrush}"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="ل" FontSize="22" FontWeight="Bold"
+                                   Foreground="White" HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="Langwich" FontSize="20" FontWeight="Bold"
+                                   Foreground="{DynamicResource PrimaryTextBrush}"/>
+                        <TextBlock Text="تبدیل هوشمند چیدمان کیبورد فارسی ↔ انگلیسی"
+                                   FontSize="11.5"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"
+                                   Margin="0,2,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+                <Rectangle Height="1" Fill="{DynamicResource BorderBrush}" Margin="0,14,0,0"/>
             </StackPanel>
-        </Border>
 
-        <!-- کارت گزینه‌ها -->
-        <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,12">
-            <StackPanel>
-                <TextBlock Text="⚙  گزینه‌ها"
-                           FontSize="13" FontWeight="SemiBold"
-                           Foreground="{DynamicResource PrimaryTextBrush}"
-                           Margin="0,0,0,10"/>
+            <!-- ===== محتوا (اسکرول اگر لازم شد) ===== -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                          MaxHeight="380" Margin="0,0,-6,0">
+                <StackPanel Margin="0,0,6,0">
 
-                <CheckBox Content="اجرای خودکار با ویندوز"
-                          IsChecked="{Binding StartWithWindows}"
-                          Margin="0,0,0,8"/>
+                    <!-- کارت میانبر -->
+                    <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,12">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <Border Width="26" Height="26" CornerRadius="7"
+                                        Background="{DynamicResource SecondaryButtonBgBrush}"
+                                        VerticalAlignment="Center">
+                                    <TextBlock Text="⌨" FontSize="13" HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="میانبر سراسری" FontSize="13" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource PrimaryTextBrush}"
+                                           Margin="10,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
 
-                <CheckBox Content="نمایش اعلان بعد از تبدیل"
-                          IsChecked="{Binding NotificationsEnabled}"
-                          Margin="0,0,0,8"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="کلید فعلی:"
+                                           Foreground="{DynamicResource SecondaryTextBrush}"
+                                           VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" Content="{Binding HotkeyDisplayText}"
+                                        Command="{Binding StartListeningForHotkeyCommand}"
+                                        Style="{StaticResource SecondaryButtonStyle}"
+                                        MinWidth="130" HorizontalAlignment="Stretch"/>
+                            </Grid>
 
-                <CheckBox Content="تغییر زبان کیبورد بعد از تبدیل (فارسی/انگلیسی)"
-                          IsChecked="{Binding SwitchKeyboardLayoutAfterConvert}"
-                          Margin="0,0,0,8"/>
+                            <TextBlock Text="🎯 حالا کلید مورد نظر را بفشارید..."
+                                       FontSize="11"
+                                       Foreground="{DynamicResource AccentBrush}"
+                                       Margin="0,8,0,0"
+                                       Visibility="{Binding IsListeningForHotkey, Converter={StaticResource BoolToVisibility}}"/>
+                        </StackPanel>
+                    </Border>
 
-                <CheckBox Content="کیبورد Persian Standard — «پ» روی کلید \ (به جای m)"
-                          IsChecked="{Binding UseAlternatePeKey}"/>
+                    <!-- کارت گزینه‌ها -->
+                    <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,12">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                <Border Width="26" Height="26" CornerRadius="7"
+                                        Background="{DynamicResource SecondaryButtonBgBrush}"
+                                        VerticalAlignment="Center">
+                                    <TextBlock Text="⚙" FontSize="13" HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="گزینه‌ها" FontSize="13" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource PrimaryTextBrush}"
+                                           Margin="10,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
 
-                <CheckBox Content="تم تاریک"
-                          IsChecked="{Binding IsDarkTheme}"/>
-            </StackPanel>
-        </Border>
+                            <CheckBox Content="اجرای خودکار با ویندوز"
+                                      IsChecked="{Binding StartWithWindows}"
+                                      Margin="0,10,0,0"/>
+                            <CheckBox Content="ایجاد میانبر روی دسکتاپ"
+                                      IsChecked="{Binding CreateDesktopShortcut}"
+                                      Margin="0,12,0,0"/>
+                            <CheckBox Content="نمایش اعلان بعد از تبدیل"
+                                      IsChecked="{Binding NotificationsEnabled}"
+                                      Margin="0,12,0,0"/>
+                            <CheckBox Content="تغییر زبان کیبورد بعد از تبدیل (فارسی/انگلیسی)"
+                                      IsChecked="{Binding SwitchKeyboardLayoutAfterConvert}"
+                                      Margin="0,12,0,0"/>
+                            <CheckBox Content="کیبورد Persian Standard — «پ» روی کلید \\ (به جای m)"
+                                      IsChecked="{Binding UseAlternatePeKey}"
+                                      Margin="0,12,0,0"/>
+                            <CheckBox Content="تم تاریک"
+                                      IsChecked="{Binding IsDarkTheme}"
+                                      Margin="0,12,0,0"/>
+                        </StackPanel>
+                    </Border>
 
-        <!-- دکمه‌های ذخیره / لغو -->
-        <DockPanel Margin="0,8,0,0">
-            <Button Content="لغو"
-                    Command="{Binding CancelCommand}"
-                    Style="{StaticResource SecondaryButtonStyle}"
-                    DockPanel.Dock="Left"
-                    Width="90"/>
-            <Button Content="ذخیره"
-                    Command="{Binding SaveCommand}"
-                    Style="{StaticResource PrimaryButtonStyle}"
-                    HorizontalAlignment="Right"/>
-        </DockPanel>
+                    <!-- راهنمای کوتاه -->
+                    <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,12">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="26" Height="26" CornerRadius="7"
+                                    Background="{DynamicResource SecondaryButtonBgBrush}"
+                                    VerticalAlignment="Center">
+                                <TextBlock Text="?" FontSize="13" FontWeight="Bold" HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Margin="10,0,0,0" VerticalAlignment="Center"
+                                       FontSize="11.5" TextWrapping="Wrap" MaxWidth="320"
+                                       Foreground="{DynamicResource SecondaryTextBrush}"
+                                       Text="متن را انتخاب کنید و کلید میانبر را بفشارید تا چیدمان آن بین فارسی و انگلیسی تبدیل شود."/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
 
-        <!-- نسخه -->
-        <TextBlock Text="نسخه ۱.۱.۰  •  ساخته‌شده با ♥ برای توسعه‌دهندگان ایرانی"
-                   FontSize="10"
-                   Foreground="{DynamicResource SecondaryTextBrush}"
-                   HorizontalAlignment="Center"
-                   Margin="0,14,0,0"/>
-    </StackPanel>
+            <!-- ===== دکمه‌ها (RTL: ذخیره اول/راست، لغو دوم/چپ) ===== -->
+                        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,14,0,0"
+                                    HorizontalAlignment="Left">
+                            <Button Content="ذخیره"
+                                    Command="{Binding SaveCommand}"
+                                    Style="{StaticResource PrimaryButtonStyle}"
+                                    MinWidth="110"/>
+                            <Button Content="لغو"
+                                    Command="{Binding CancelCommand}"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    Width="90"
+                                    Margin="10,0,0,0"/>
+                        </StackPanel>
+
+                        <!-- ===== نسخه ===== -->
+                        <TextBlock Grid.Row="4" Text="نسخه ۱.۱.۰  •  ساخته‌شده با ♥ برای توسعه‌دهندگان ایرانی"
+                                   FontSize="10"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,10,0,0"/>
+        </Grid>
+    </Border>
 </Window>

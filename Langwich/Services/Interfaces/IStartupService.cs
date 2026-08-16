@@ -11,4 +11,10 @@ public interface IStartupService
 
     /// <summary>وضعیت اجرای خودکار را فعال یا غیرفعال می‌کند.</summary>
     void SetStartup(bool enable);
+
+    /// <summary>آیا میانبر (.lnk) روی دسکتاپ وجود دارد؟</summary>
+    bool IsDesktopShortcutCreated { get; }
+
+    /// <summary>میانبر دسکتاپ را می‌سازد یا حذف می‌کند.</summary>
+    void SetDesktopShortcut(bool create);
 }
