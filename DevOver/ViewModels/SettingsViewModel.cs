@@ -59,6 +59,24 @@ public sealed class SettingsViewModel : ViewModelBase
         set => SetProperty(ref _isDarkTheme, value);
     }
 
+    private bool _useAlternatePeKey;
+    /// <summary>
+    /// اگر true باشد، حرف «پ» به کلید \ نگاشت می‌شود (چیدمان Persian Standard).
+    /// </summary>
+    public bool UseAlternatePeKey
+    {
+        get => _useAlternatePeKey;
+        set => SetProperty(ref _useAlternatePeKey, value);
+    }
+
+    private bool _switchKeyboardLayoutAfterConvert = true;
+    /// <summary>اگر true باشد، بعد از تبدیل، زبان کیبورد هم عوض می‌شود.</summary>
+    public bool SwitchKeyboardLayoutAfterConvert
+    {
+        get => _switchKeyboardLayoutAfterConvert;
+        set => SetProperty(ref _switchKeyboardLayoutAfterConvert, value);
+    }
+
     /// <summary>نمایش متنی میانبر فعلی برای دکمه‌ی تغییر میانبر.</summary>
     public string HotkeyDisplayText
     {
@@ -77,8 +95,14 @@ public sealed class SettingsViewModel : ViewModelBase
     /// <summary>بعد از ذخیره‌ی تنظیمات ارسال می‌شود تا App.xaml.cs میانبر را دوباره ثبت کند.</summary>
     public event EventHandler<(ModifierKeys Modifiers, Key Key)>? HotkeyChanged;
 
-    /// <summary>وقتی کاربر تم را تغییر دهد ارسال می‌شود تا ThemeManager در App.xaml.cs صدا زده شود.</summary>
+    /// <summary>وقتی تم را تغییر دهد ارسال می‌شود تا ThemeManager در App.xaml.cs صدا زده شود.</summary>
     public event EventHandler<bool>? ThemeChanged;
+
+    /// <summary>
+    /// وقتی تنظیم نگاشت «پ» تغییر کند ارسال می‌شود تا سرویس تبدیل در App.xaml.cs آپدیت شود.
+    /// مقدار bool: true یعنی کلید \ (Persian Standard)، false یعنی کلید m.
+    /// </summary>
+    public event EventHandler<bool>? PeKeyLayoutChanged;
 
     /// <summary>وقتی پنجره باید بسته شود ارسال می‌شود.</summary>
     public event EventHandler? RequestClose;
@@ -107,6 +131,8 @@ public sealed class SettingsViewModel : ViewModelBase
         _startWithWindows    = s.StartWithWindows;
         _notificationsEnabled = s.NotificationsEnabled;
         _isDarkTheme         = s.IsDarkTheme;
+        _useAlternatePeKey   = s.UseAlternatePeKey;
+        _switchKeyboardLayoutAfterConvert = s.SwitchKeyboardLayoutAfterConvert;
 
         StartListeningForHotkeyCommand = new RelayCommand(() =>
         {
@@ -152,6 +178,8 @@ public sealed class SettingsViewModel : ViewModelBase
         _settingsService.Current.StartWithWindows    = StartWithWindows;
         _settingsService.Current.NotificationsEnabled = NotificationsEnabled;
         _settingsService.Current.IsDarkTheme         = IsDarkTheme;
+        _settingsService.Current.UseAlternatePeKey   = UseAlternatePeKey;
+        _settingsService.Current.SwitchKeyboardLayoutAfterConvert = SwitchKeyboardLayoutAfterConvert;
 
         _settingsService.Save();
 
@@ -166,6 +194,13 @@ public sealed class SettingsViewModel : ViewModelBase
         if (IsDarkTheme != prevDark)
         {
             ThemeChanged?.Invoke(this, IsDarkTheme);
+        }
+
+        // اگر تنظیم نگاشت «پ» تغییر کرده، سرویس تبدیل را به‌روز کن
+        if (UseAlternatePeKey != _settingsService.Current.UseAlternatePeKey)
+        {
+            // بعد از ذخیره مقدار جدید در Current، رویداد را صدا بزن
+            PeKeyLayoutChanged?.Invoke(this, _settingsService.Current.UseAlternatePeKey);
         }
 
         RequestClose?.Invoke(this, EventArgs.Empty);

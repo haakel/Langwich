@@ -1,6 +1,6 @@
 ; Langwich Installer — Inno Setup 7
 #define MyAppName      "Langwich"
-#define MyAppVersion   "1.0.0"
+#define MyAppVersion   "1.1.0"
 #define MyAppPublisher "Langwich"
 #define MyAppExeName   "Langwich.exe"
 #define MyAppSourceDir "..\DevOver\publish"

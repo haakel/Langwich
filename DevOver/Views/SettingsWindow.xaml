@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:helpers="clr-namespace:DevOver.Helpers"
         Title="Langwich – تنظیمات"
-        Width="420" Height="420"
+        Width="420" Height="490"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         FlowDirection="RightToLeft"
@@ -75,6 +75,13 @@
                           IsChecked="{Binding NotificationsEnabled}"
                           Margin="0,0,0,8"/>
 
+                <CheckBox Content="تغییر زبان کیبورد بعد از تبدیل (فارسی/انگلیسی)"
+                          IsChecked="{Binding SwitchKeyboardLayoutAfterConvert}"
+                          Margin="0,0,0,8"/>
+
+                <CheckBox Content="کیبورد Persian Standard — «پ» روی کلید \ (به جای m)"
+                          IsChecked="{Binding UseAlternatePeKey}"/>
+
                 <CheckBox Content="تم تاریک"
                           IsChecked="{Binding IsDarkTheme}"/>
             </StackPanel>
@@ -94,7 +101,7 @@
         </DockPanel>
 
         <!-- نسخه -->
-        <TextBlock Text="نسخه ۱.۰.۰  •  ساخته‌شده با ♥ برای توسعه‌دهندگان ایرانی"
+        <TextBlock Text="نسخه ۱.۱.۰  •  ساخته‌شده با ♥ برای توسعه‌دهندگان ایرانی"
                    FontSize="10"
                    Foreground="{DynamicResource SecondaryTextBrush}"
                    HorizontalAlignment="Center"

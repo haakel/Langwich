@@ -44,6 +44,15 @@ internal static class NativeMethods
     [DllImport("user32.dll")]
     internal static extern IntPtr GetKeyboardLayout(uint idThread);
 
+    [DllImport("user32.dll")]
+    internal static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+    [DllImport("user32.dll")]
+    internal static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+    internal const uint WM_INPUTLANGCHANGEREQUEST = 0x0050;
+    internal const uint INPUTLANGCHANGE_FORWARD   = 0x0002;
+
     internal const uint KLF_ACTIVATE = 0x00000001;
     internal const uint KLF_NOTELSGLOBAL = 0x00000004;
 

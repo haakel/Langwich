@@ -17,4 +17,16 @@ public sealed class AppSettings
     public bool StartWithWindows { get; set; } = false;
     public bool NotificationsEnabled { get; set; } = true;
     public bool IsDarkTheme { get; set; } = true;
+
+    /// <summary>
+    /// اگر true باشد، حرف «پ» در تبدیل فارسی→انگلیسی به کلید \ نگاشت می‌شود
+    /// (چیدمان Persian Standard). false = کلید m (چیدمان Microsoft Persian پیش‌فرض).
+    /// </summary>
+    public bool UseAlternatePeKey { get; set; } = false;
+
+    /// <summary>
+    /// اگر true باشد، بعد از تبدیل متن، زبان کیبورد ویندوز هم عوض می‌شود
+    /// (فارسی برای متن فارسی، انگلیسی برای متن انگلیسی).
+    /// </summary>
+    public bool SwitchKeyboardLayoutAfterConvert { get; set; } = true;
 }

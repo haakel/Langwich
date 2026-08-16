@@ -63,6 +63,9 @@ public partial class App : Application
         _currentModifiers = settings.HotkeyModifiers;
         _currentKey       = settings.HotkeyKey;
 
+        // اعمال تنظیمات نگاشت «پ» روی سرویس تبدیل
+        _converterService.UseAlternatePeKey = settings.UseAlternatePeKey;
+
         // ۴. اعمال تم
         ThemeManager.ApplyTheme(settings.IsDarkTheme);
 
@@ -120,8 +123,11 @@ public partial class App : Application
             // ۳. جایگزینی متن در برنامه‌ی هدف
             await _textSelectionService.ReplaceSelectedTextAsync(result.ConvertedText);
 
-            // ۴. تغییر زبان کیبورد مطابق با متن تبدیل‌شده
-            SwitchKeyboardLayout(result.Direction);
+            // ۴. تغییر زبان کیبورد مطابق با متن تبدیل‌شده (اگر در تنظیمات فعال باشد)
+            if (_settingsService!.Current.SwitchKeyboardLayoutAfterConvert)
+            {
+                SwitchKeyboardLayout(result.Direction);
+            }
         }
         catch (Exception)
         {
@@ -144,6 +150,7 @@ public partial class App : Application
 
         var vm = new SettingsViewModel(_settingsService!, _startupService!, _hotkeyService!);
         vm.ThemeChanged += (_, isDark) => ThemeManager.ApplyTheme(isDark);
+        vm.PeKeyLayoutChanged += (_, useAlternate) => _converterService!.UseAlternatePeKey = useAlternate;
 
         var win = new SettingsWindow { DataContext = vm };
         win.Show();
@@ -172,7 +179,9 @@ public partial class App : Application
     }
 
     // ---- تغییر زبان کیبورد ----
-
+    // مشکل قبلی: ActivateKeyboardLayout فقط روی thread خود برنامه اثر می‌کرد و
+    // زبان برنامه‌ای که کاربر روی آن کار می‌کند (foreground) عوض نمی‌شد.
+    // راه‌حل: ارسال پیام WM_INPUTLANGCHANGEREQUEST به پنجره‌ی فعال + بارگذاری چیدمان.
     private static void SwitchKeyboardLayout(Models.ConversionDirection direction)
     {
         try
@@ -181,11 +190,30 @@ public partial class App : Application
                 ? Helpers.NativeMethods.KLID_PERSIAN
                 : Helpers.NativeMethods.KLID_ENGLISH;
 
+            // تضمین می‌کند چیدمان در سیستم بارگذاری شده باشد
             var hkl = Helpers.NativeMethods.LoadKeyboardLayout(klid, Helpers.NativeMethods.KLF_ACTIVATE);
-            if (hkl != IntPtr.Zero)
+            if (hkl == IntPtr.Zero)
             {
-                Helpers.NativeMethods.ActivateKeyboardLayout(hkl, Helpers.NativeMethods.KLF_NOTELSGLOBAL);
+                return;
             }
+
+            // ۱) پنجره‌ی فعال (foreground) را پیدا کن
+            IntPtr fg = Helpers.NativeMethods.GetForegroundWindow();
+            if (fg == IntPtr.Zero)
+            {
+                return;
+            }
+
+            // ۲) به آن پنجره پیام «تغییر زبان» بفرست — این روش واقعاً زبان برنامه را عوض می‌کند
+            Helpers.NativeMethods.PostMessage(
+                fg,
+                Helpers.NativeMethods.WM_INPUTLANGCHANGEREQUEST,
+                new IntPtr(Helpers.NativeMethods.INPUTLANGCHANGE_FORWARD),
+                hkl);
+
+            // ۳) پشتیبان: برای thread پنجره‌ی فعال هم فعالش کن (برخی اپ‌ها به پیام جواب نمی‌دهند)
+            Helpers.NativeMethods.GetWindowThreadProcessId(fg, out _);
+            Helpers.NativeMethods.ActivateKeyboardLayout(hkl, Helpers.NativeMethods.KLF_NOTELSGLOBAL);
         }
         catch
         {

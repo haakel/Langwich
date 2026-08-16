@@ -18,4 +18,11 @@ public interface IKeyboardLayoutConverterService
 
     /// <summary>متن فارسی را به انگلیسی (با چیدمان فارسی) تبدیل می‌کند.</summary>
     string ConvertToEnglish(string persianText);
+
+    /// <summary>
+    /// اگر true باشد، حرف «پ» در تبدیل فارسی←انگلیسی به کلید \ نگاشت می‌شود
+    /// (چیدمان Persian Standard — کیبوردهایی که «پ» روی کلید \ دارند).
+    /// پیش‌فرض false: کلید m (چیدمان Microsoft Persian).
+    /// </summary>
+    bool UseAlternatePeKey { get; set; }
 }

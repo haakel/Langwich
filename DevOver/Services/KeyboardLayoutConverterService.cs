@@ -14,6 +14,8 @@ public sealed class KeyboardLayoutConverterService : IKeyboardLayoutConverterSer
     // ردیف Q: q=ض  w=ص  e=ث  r=ق  t=ف  y=غ  u=ع  i=ه  o=خ  p=ح  [=ج  ]=چ
     // ردیف A: a=ش  s=س  d=ی  f=ب  g=ل  h=ا  j=ت  k=ن  l=م  ;=ک  '=گ
     // ردیف Z: z=ظ  x=ط  c=ز  v=ر  b=ذ  n=د  m=پ  ,=و  .=.  /=/
+    // نکته: در چیدمان «Persian Standard» حرف «پ» روی کلید \ است (نه m).
+    // هر دو کلید پذیرفته می‌شوند و برای تبدیل معکوس بر اساس تنظیم کاربر انتخاب می‌شود.
     private static readonly Dictionary<char, char> EnglishToPersian = new()
     {
         // ردیف بالا
@@ -28,12 +30,46 @@ public sealed class KeyboardLayoutConverterService : IKeyboardLayoutConverterSer
         ['l'] = 'م', [';'] = 'ک', ['\''] = 'گ',
         // ردیف پایین
         ['z'] = 'ظ', ['x'] = 'ط', ['c'] = 'ز', ['v'] = 'ر',
-        ['b'] = 'ذ', ['n'] = 'د', ['m'] = 'پ', [','] = 'و', ['/'] = '؟',
+        ['b'] = 'ذ', ['n'] = 'د', ['m'] = 'پ', ['\\'] = 'پ', [','] = 'و', ['/'] = '؟',
     };
 
-    // نگاشت معکوس (فارسی → انگلیسی)
-    private static readonly Dictionary<char, char> PersianToEnglish =
-        EnglishToPersian.ToDictionary(kv => kv.Value, kv => kv.Key);
+    // نگاشت معکوس (فارسی → انگلیسی). برای «پ» بسته به تنظیم کاربر،
+    // کلید m یا \ انتخاب می‌شود (چیدمان استاندارد در برابر Persian Standard).
+    private Dictionary<char, char> _persianToEnglish = BuildPersianToEnglish(alternatePeKey: false);
+
+    /// <summary>
+    /// اگر true باشد، حرف «پ» در تبدیل فارسی←انگلیسی به کلید \ نگاشت می‌شود
+    /// (چیدمان Persian Standard). پیش‌فرض false است (کلید m / چیدمان Microsoft Persian).
+    /// </summary>
+    public bool UseAlternatePeKey
+    {
+        get => _useAlternatePeKey;
+        set
+        {
+            if (_useAlternatePeKey != value)
+            {
+                _useAlternatePeKey = value;
+                _persianToEnglish = BuildPersianToEnglish(value);
+            }
+        }
+    }
+
+    private bool _useAlternatePeKey;
+
+    private static Dictionary<char, char> BuildPersianToEnglish(bool alternatePeKey)
+    {
+        var map = new Dictionary<char, char>();
+        foreach (var kv in EnglishToPersian)
+        {
+            if (kv.Value == 'پ')
+            {
+                continue; // «پ» به صورت جداگانه و بر اساس تنظیم مدیریت می‌شود
+            }
+            map.TryAdd(kv.Value, kv.Key);
+        }
+        map['پ'] = alternatePeKey ? '\\' : 'm';
+        return map;
+    }
 
     public ConversionResult Convert(string text)
     {
@@ -112,7 +148,7 @@ public sealed class KeyboardLayoutConverterService : IKeyboardLayoutConverterSer
         var sb = new System.Text.StringBuilder(persianText.Length);
         foreach (char c in persianText)
         {
-            if (PersianToEnglish.TryGetValue(c, out char english))
+            if (_persianToEnglish.TryGetValue(c, out char english))
             {
                 sb.Append(english);
             }
