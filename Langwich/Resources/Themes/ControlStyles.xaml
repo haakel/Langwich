@@ -102,10 +102,12 @@
         <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}"/>
         <Setter Property="FontSize"   Value="13"/>
         <Setter Property="Cursor"     Value="Hand"/>
+        <Setter Property="FlowDirection" Value="RightToLeft"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="CheckBox">
+                    <!-- در RTL: اولین آیتم (Box) سمت راست می‌شود، متن سمت چپ آن -->
                     <StackPanel Orientation="Horizontal" Background="Transparent">
                         <Border x:Name="Box"
                                 Width="20" Height="20"

@@ -113,14 +113,11 @@
                             </StackPanel>
 
                             <CheckBox Content="اجرای خودکار با ویندوز"
-                                      IsChecked="{Binding StartWithWindows}"
-                                      Margin="0,10,0,0"/>
-                            <CheckBox Content="ایجاد میانبر روی دسکتاپ"
-                                      IsChecked="{Binding CreateDesktopShortcut}"
-                                      Margin="0,12,0,0"/>
-                            <CheckBox Content="نمایش اعلان بعد از تبدیل"
-                                      IsChecked="{Binding NotificationsEnabled}"
-                                      Margin="0,12,0,0"/>
+                                                                  IsChecked="{Binding StartWithWindows}"
+                                                                  Margin="0,10,0,0"/>
+                                                        <CheckBox Content="نمایش اعلان بعد از تبدیل"
+                                                                  IsChecked="{Binding NotificationsEnabled}"
+                                                                  Margin="0,12,0,0"/>
                             <CheckBox Content="تغییر زبان کیبورد بعد از تبدیل (فارسی/انگلیسی)"
                                       IsChecked="{Binding SwitchKeyboardLayoutAfterConvert}"
                                       Margin="0,12,0,0"/>
@@ -151,19 +148,27 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <!-- ===== دکمه‌ها (RTL: ذخیره اول/راست، لغو دوم/چپ) ===== -->
-                        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,14,0,0"
-                                    HorizontalAlignment="Left">
-                            <Button Content="ذخیره"
-                                    Command="{Binding SaveCommand}"
-                                    Style="{StaticResource PrimaryButtonStyle}"
-                                    MinWidth="110"/>
-                            <Button Content="لغو"
+            <!-- ===== دکمه‌ها: لغو راست، ذخیره چپ (استاندارد RTL فارسی) ===== -->
+                        <Grid Grid.Row="3" Margin="0,14,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <!-- لغو: ستون ۰ (راست در RTL) — بچسب به راست پنجره -->
+                            <Button Grid.Column="0" Content="لغو"
                                     Command="{Binding CancelCommand}"
                                     Style="{StaticResource SecondaryButtonStyle}"
                                     Width="90"
-                                    Margin="10,0,0,0"/>
-                        </StackPanel>
+                                    HorizontalAlignment="Right"/>
+                            <!-- ذخیره: ستون ۲ (چپ در RTL) — بچسب به چپ پنجره -->
+                            <Button Grid.Column="2" Content="ذخیره"
+                                    Command="{Binding SaveCommand}"
+                                    Style="{StaticResource PrimaryButtonStyle}"
+                                    MinWidth="110"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,0,10,0"/>
+                        </Grid>
 
                         <!-- ===== نسخه ===== -->
                         <TextBlock Grid.Row="4" Text="نسخه ۱.۱.۰  •  ساخته‌شده با ♥ برای توسعه‌دهندگان ایرانی"

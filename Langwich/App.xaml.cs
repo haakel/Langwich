@@ -101,11 +101,17 @@ public partial class App : Application
         _hotkeyService.HotkeyPressed += OnHotkeyPressed;
 
         // ۷. نمایش آیکون سینی
-        _trayIconService = new TrayIconService();
-        _trayIconService.SettingsRequested += OnSettingsRequested;
-        _trayIconService.ExitRequested     += OnExitRequested;
-        _trayIconService.Initialize();
-    }
+                _trayIconService = new TrayIconService();
+                _trayIconService.SettingsRequested += OnSettingsRequested;
+                _trayIconService.ExitRequested     += OnExitRequested;
+                _trayIconService.Initialize();
+
+                // ۷.۵ اگر با آرگومان --settings اجرا شد، پنجره تنظیمات را مستقیم باز کن (برای تست/دیاگ)
+                if (e.Args.Contains("--settings"))
+                {
+                    Dispatcher.BeginInvoke(() => OnSettingsRequested(this, EventArgs.Empty));
+                }
+            }
 
     // ---- هندلر میانبر ----
 
