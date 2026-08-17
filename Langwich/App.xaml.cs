@@ -66,14 +66,10 @@ public partial class App : Application
                 // اعمال تنظیمات نگاشت «پ» روی سرویس تبدیل
                 _converterService.UseAlternatePeKey = settings.UseAlternatePeKey;
 
-                // ۳.۵ اگر اولین اجراست، پنجره‌ی خوش‌آمد (Splash) را نشان بده
-                if (!settings.HasShownSplash)
-                {
-                    var splash = new Views.SplashWindow();
-                    splash.ShowAndCloseAfter(TimeSpan.FromSeconds(2.2));
-                    settings.HasShownSplash = true;
-                    _settingsService.Save();
-                }
+                // ۳.۵ پنجره‌ی خوش‌آمد (Splash) — همیشه موقع اجرا نمایش داده می‌شود
+                // تا کاربر بفهمد برنامه اجرا شده (کوتاه و غیرمزاحم)
+                var splash = new Views.SplashWindow();
+                splash.ShowAndCloseAfter(TimeSpan.FromSeconds(1.6));
 
         // ۴. اعمال تم
         ThemeManager.ApplyTheme(settings.IsDarkTheme);
