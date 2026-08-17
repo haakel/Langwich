@@ -1,9 +1,9 @@
 ; Langwich Installer — Inno Setup 7
 #define MyAppName      "Langwich"
-#define MyAppVersion   "1.0.0"
+#define MyAppVersion   "1.1.0"
 #define MyAppPublisher "Langwich"
 #define MyAppExeName   "Langwich.exe"
-#define MyAppSourceDir "..\DevOver\publish"
+#define MyAppSourceDir "..\Langwich\publish"
 
 [Setup]
 AppId={{B5E3A7F2-9C4D-4E8A-A1B2-C3D4E5F6A7B8}
@@ -43,7 +43,6 @@ Filename: "{app}\{#MyAppExeName}"; Description: "Launch {#MyAppName}"; Flags: no
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{localappdata}\Langwich"
-Type: filesandordirs; Name: "{localappdata}\DevOver"
 Type: filesandordirs; Name: "{app}"
 
 [Code]
